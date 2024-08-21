@@ -17,6 +17,7 @@ namespace FeatureFlagging
                 throw new InvalidOperationException($"Invalid environment setting: {environmentSetting}");
             }
 
+            //Add Azure App Configuration
             builder.Host.ConfigureAppConfiguration(config =>
             {
                 var settings = config.Build();
@@ -30,12 +31,12 @@ namespace FeatureFlagging
                 });
             });
 
+            builder.Services.AddFeatureManagement(); //Register the feature management services
+
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
-            builder.Services.AddFeatureManagement(); //Register the feature management services
 
             var app = builder.Build();
 
@@ -44,14 +45,8 @@ namespace FeatureFlagging
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
             app.UseHttpsRedirection();
-
             app.UseAuthorization();
-
-
-
-
             app.MapControllers();
 
             app.Run();
